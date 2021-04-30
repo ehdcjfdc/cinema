@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.mapper.film">
+	<select id="getFilmList" parameterType="com.film.domain.FilmForm" resultType="com.film.domain.FilmDataDTO">
+    
+        SELECT 
+        	 THEATERNUM
+        	,SEAT_ROW
+        	,SEAT_COL
+        	,CUR
+        	,PRICE
+        FROM
+        	FILM.THEATER
+        	
+    
+    </select>
+    
+    <select id="getAppList" parameterType="com.film.domain.FilmForm" resultType="String">
+    
+        SELECT 
+        	 SEATS
+        FROM
+        	FILM.APPOINTMENT
+        WHERE
+        	THEATER = #{theaterNum} 
+        		AND T = #{t}
+    
+    </select>
+    <select id="getTime" parameterType="com.film.domain.FilmForm" resultType="String">
+    
+        SELECT 
+        	 T
+        FROM
+        	FILM.THEATER_TIME
+        WHERE
+        	THEATERNUM = #{theaterNum}
+    
+    </select>
+    <insert id="insertApp" parameterType="com.film.domain.FilmForm">
+    	INSERT 
+        INTO FILM.APPOINTMENT
+        (
+               TELL
+              ,THEATER
+              ,T
+              ,M
+              ,SEATS
+        ) 
+        VALUES 
+        (
+
+             #{phon}
+            ,#{theaterNum}
+            ,#{t}
+            ,#{m}
+            ,#{seats} 
+        )
+    </insert>
+    <select id="getApp" parameterType="com.film.domain.FilmForm" resultType="com.film.domain.FilmDataDTO">
+    
+        SELECT 
+        	  A.APPNUM AS APPNUM
+        	 ,B.THEATERNUM AS THEATERNUM
+        	 ,B.CUR AS CUR
+        	 ,A.T AS T
+        	 ,A.M AS M
+        	 ,A.SEATS AS SEATS
+        	 ,B.PRICE*A.M AS PRICE
+        FROM
+        	FILM.APPOINTMENT A JOIN FILM.THEATER B ON B.THEATERNUM = A.THEATER
+        WHERE
+        	A.TELL = #{phon}
+    
+    </select>
+    <delete id="delApp" parameterType="com.film.domain.FilmForm">
+    	DELETE 
+        FROM FILM.APPOINTMENT
+        WHERE APPNUM=#{appNum}
+    </delete>
+    
+</mapper>
